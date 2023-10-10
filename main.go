@@ -54,25 +54,8 @@ func GetConfig() *Config {
 	return instance
 }
 
-func (s *ServerPool) AddBackend(backend *Backend) {
-	s.backends = append(s.backends, backend)
-}
-
-func (s *ServerPool) NextIndex() int {
-	return int(atomic.AddUint64(&s.current, uint64(1)) % uint64(len(s.backends)))
-}
-
-func (s *ServerPool) MarkBackendStatus(backendUrl *url.URL, alive bool) {
-	for _, b := range s.backends {
-		if b.URL.String() == backendUrl.String() {
-			b.SetAlive(alive)
-			break
-		}
-	}
-}
-
 func (s *ServerPool) GetNextPeer() *Backend {
-	next := s.NextIndex()
+	next := int(atomic.AddUint64(&s.current, uint64(1)) % uint64(len(s.backends)))
 	l := len(s.backends) + next
 	for i := next; i < l; i++ {
 		idx := i % len(s.backends)
@@ -148,7 +131,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		serverPool.AddBackend(&Backend{
+		serverPool.backends = append(serverPool.backends, &Backend{
 			URL:          serverUrl,
 			Alive:        true,
 			ReverseProxy: httputil.NewSingleHostReverseProxy(serverUrl),
