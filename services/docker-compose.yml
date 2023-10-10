@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  web1:
+    container_name: web1name
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    restart:  always
+    networks:
+     - backend
+
+  web2:
+    container_name: web2name
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+    restart:  always
+    networks:
+     - backend
+
+  web3:
+    container_name: web3name
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8000"
+    restart: always
+    networks:
+      - backend
+
+  web4:
+    container_name: web4name
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8004:8000"
+    restart: always
+    networks:
+      - backend
+
+  web5:
+    container_name: web5name
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8005:8000"
+    restart: always
+    networks:
+      - backend
+
+networks:
+  backend:
